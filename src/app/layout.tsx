@@ -1,4 +1,5 @@
-import './globals.css'
+import "./globals.css";
+import BlogLayout from './BlogLayout'
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,8 +12,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+
+    <html className='light' lang="en">
+
+      <body className='bg-transparent dark:bg-gray-900'>
+
+        <BlogLayout>
+          {children}
+        </BlogLayout>
+      </body>
+
     </html>
+
   )
 }
