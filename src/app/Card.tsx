@@ -1,9 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
+import { formatDate } from "./utility"
+
 
 function Card({ item }) {
 
-  console.log(item)
   return (
 
     <div className="max-w-full bg-white dark:bg-gray-800">
@@ -17,7 +18,7 @@ function Card({ item }) {
       <div className="p-3">
 
         <div className="flex mb-3">
-          <p className="text-sm text-gray-500 dark:text-gray-400"> Mar 10, 2023 </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400"> {formatDate(item.published_at)} </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mx-1"> , </p>
           <p className="text-sm text-gray-500 dark:text-gray-400"> {item.reading_time} min read </p>
         </div>
