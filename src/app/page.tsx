@@ -2,6 +2,7 @@
 import { getPosts } from "./ghost-client"
 import Card from './Card'
 
+
 export default async function Home() {
 
   const getPost = await getPosts()
