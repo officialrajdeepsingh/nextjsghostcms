@@ -15,9 +15,8 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
 
         <div className="mx-auto max-w-screen-sm text-center">
 
-          <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">404</h1>
-          <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white"> Something's wrong</p>
-          <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">Sorry, we can't find that article. You'll find lots to explore on the home page.</p>
+          <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">Something wrong</h1>
+          <p className="mb-4 text-lg p-2 font-light bg-red-500 text-white dark:bg-red-400 dark:text-white">{error.message}</p>
 
           <div className='flex justify-around mt-2'>
 
