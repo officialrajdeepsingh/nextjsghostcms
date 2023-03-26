@@ -3,14 +3,14 @@
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaSun, FaRegMoon } from "react-icons/fa";
 import { useTheme } from 'next-themes'
 import Link from "next/link";
-import Search from "./Search";
+
+import dynamic from 'next/dynamic'
+
+const Search = dynamic(() => import('./Search'))
 
 function Header() {
 
   const { theme, setTheme } = useTheme()
-
-
-  console.log(theme)
 
   return (
     <header className="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full">
@@ -25,11 +25,8 @@ function Header() {
 
           <ul className="flex flex-wrap p-4 md:space-x-8 md:mt-0 md:text-sm md:font-medium">
 
-            <li>
-              <Link href={"#"} className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-700 dark:hover:text-blue-700 rounded md:p-0 dark:text-white" aria-current="page">
-                <Search />
-              </Link>
-
+            <li className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-700 dark:hover:text-blue-700 rounded md:p-0 dark:text-white" aria-current="page">
+              <Search />
             </li>
 
             <li>
