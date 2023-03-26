@@ -5,8 +5,7 @@ const nextConfig = {
   },
 
   images: {
-    domains: ["images.unsplash.com", "static.ghost.org"]
-
+    domains: ["images.unsplash.com", "static.ghost.org", "www.gravatar.com", "localhost"]
   },
 }
 
