@@ -2,8 +2,27 @@ import React from 'react'
 import Link from "next/link";
 import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
 import Card from "../../Card"
-import { getSingleAuthor, getSingleAuthorPost } from "../../ghost-client"
+import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
+
+export async function generateStaticParams() {
+
+  const allAuthor = await getAllAuthors()
+
+  let allAuthorItem: { slug: string }[] = []
+
+  allAuthor.map(item => {
+    allAuthorItem.push({
+      slug: item.slug,
+    })
+  })
+  console.log("All authors: ", allAuthorItem)
+
+  return allAuthorItem
+
+}
+
+
 
 
 async function Authors({ params }: { params: { slug: string }; }) {
@@ -69,7 +88,7 @@ async function Authors({ params }: { params: { slug: string }; }) {
           <div className="container my-12 mx-auto grid grid-cols-1 gap-12 md:gap-12 lg:gap-12  lg:grid-cols-3  md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 ">
 
             {
-              allAuthor.map(item => <Card item={item} />)
+              allAuthor.map(item => <Card key={item.uuid} item={item} />)
             }
 
           </div>
