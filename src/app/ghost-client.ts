@@ -2,8 +2,8 @@ import GhostContentAPI from "@tryghost/content-api";
 
 // Create API instance with site credentials
 const api = new GhostContentAPI({
-  url: 'http://localhost:2368',
-  key: 'd37f8a76a0fd9cd909fe3f1db5',
+  url: process.env.GHOST_URL as string,
+  key: process.env.GHOST_KEY as string,
   version: "v5.0"
 });
 
@@ -23,7 +23,7 @@ export async function getPaginationPosts(page: number) {
     .browse({
       include: ["tags", "authors"],
       limit: 10,
-      page: 2
+      page: page
     })
     .catch(err => {
       console.error(err);
@@ -64,6 +64,13 @@ export async function getTagPosts(tagSlug: string) {
   });
 
 }
+export async function getAllTags() {
+  return await api.tags.browse({
+    limit: "all"
+  }).catch(err => {
+    console.log(err)
+  })
+}
 
 export async function getSearchPosts() {
   return await api.posts.browse({ include: ["tags", "authors"], limit: "all" }).catch(err => {
@@ -72,16 +79,16 @@ export async function getSearchPosts() {
 }
 
 
-export async  function getAllAuthors() {
+export async function getAllAuthors() {
 
-   return await api.authors
-   .browse({
+  return await api.authors
+    .browse({
       limit: "all"
     })
     .catch(err => {
       console.error(err);
     });
 
-  
+
 }
 
