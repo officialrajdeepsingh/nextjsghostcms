@@ -11,7 +11,19 @@ export async function getPosts() {
   return await api.posts
     .browse({
       include: ["tags", "authors"],
-      limit: "all"
+      limit: 10
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
+export async function getPaginationPosts(page: number) {
+  return await api.posts
+    .browse({
+      include: ["tags", "authors"],
+      limit: 10,
+      page: 2
     })
     .catch(err => {
       console.error(err);
@@ -53,9 +65,23 @@ export async function getTagPosts(tagSlug: string) {
 
 }
 
-export async function getSearchPosts(tagSlug: string) {
-
-  return await api.posts.browse({ filter: `title:My new`, include: 'count.posts' }).catch(err => {
+export async function getSearchPosts() {
+  return await api.posts.browse({ include: ["tags", "authors"], limit: "all" }).catch(err => {
     console.log(err)
   });
 }
+
+
+export async  function getAllAuthors() {
+
+   return await api.authors
+   .browse({
+      limit: "all"
+    })
+    .catch(err => {
+      console.error(err);
+    });
+
+  
+}
+
