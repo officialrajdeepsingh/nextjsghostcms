@@ -1,11 +1,19 @@
-// import MorePost from "../../MorePost";
 import Newsletter from "../../Newsletter";
 import Link from "next/link";
-import { getSinglePost } from "../../ghost-client"
+import { getSinglePost, getPosts } from "../../ghost-client"
 import Image from "next/image";
 import Script from 'next/script'
 import { FaAngleLeft } from "react-icons/fa";
 import { formatDate } from "../../utility";
+
+export async function generateStaticParams() {
+  const posts = await getPosts()
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 
 async function Read({ params }: { params: { slug: string }; }) {
 
@@ -20,7 +28,7 @@ async function Read({ params }: { params: { slug: string }; }) {
 
           <article className="mx-auto w-full max-w-3xl format format-xl sm:format-base  format-blue dark:format-invert">
 
-            <div className="flex my-2 w-full justify-between">
+            <div className="flex mb-4 w-full justify-between">
 
               <Link className="inline-flex items-center" href={`/`}>
                 <FaAngleLeft /> Back
@@ -72,11 +80,7 @@ async function Read({ params }: { params: { slug: string }; }) {
                 }}></figcaption>
             </figure>
 
-            <div dangerouslySetInnerHTML={{
-              __html: getPost.html
-            }}>
-
-            </div>
+            <div dangerouslySetInnerHTML={{ __html: getPost.html }}></div>
 
           </article>
         </div>
