@@ -1,7 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import { formatDate } from "./utility"
-import { type PostOrPage } from "tryghost__content-api"
 
 function Card({ item }: { item: PostOrPage }) {
 
@@ -9,7 +8,7 @@ function Card({ item }: { item: PostOrPage }) {
     <div className="max-w-full bg-white dark:bg-gray-800" >
 
 
-      <Link href="#">
+      <Link href={`/read/${item.slug}`}>
         <Image className="rounded-lg p-3" width={1000} height={324} src={item.feature_image} alt={item.title} />
       </Link>
 
