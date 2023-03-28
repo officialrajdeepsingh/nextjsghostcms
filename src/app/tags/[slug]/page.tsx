@@ -1,6 +1,23 @@
 import React from 'react'
 import Card from "../../Card"
-import { getTagPosts } from "../../ghost-client"
+import { getTagPosts, getAllTags } from "../../ghost-client"
+
+export async function generateStaticParams() {
+
+  const allTags = await getAllTags()
+
+  let allTagsItem: { slug: string }[] = []
+
+  allTags.map(item => {
+    allTagsItem.push({
+      slug: item.slug,
+    })
+  })
+
+  return allTagsItem
+
+}
+
 
 async function Tag({ params }: { params: { slug: string }; }) {
 
