@@ -1,4 +1,4 @@
-import { getPosts } from "./ghost-client"
+import { getPosts, getSearchPosts } from "./ghost-client"
 import Card from './Card'
 import Pagination from "./Pagination"
 import * as fs from 'node:fs';
@@ -8,12 +8,13 @@ import { cache } from "react"
 export default async function Home() {
 
   const getPost = await getPosts()
+  const AllPostForSerach = await getSearchPosts()
 
   cache(async () => {
 
     try {
 
-      const jsonString = JSON.stringify(getPost)
+      const jsonString = JSON.stringify(AllPostForSerach)
 
       fs.writeFile('search.json', jsonString, 'utf8', err => {
         if (err) {
