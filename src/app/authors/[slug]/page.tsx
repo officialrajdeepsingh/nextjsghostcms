@@ -16,8 +16,6 @@ export async function generateStaticParams() {
       slug: item.slug,
     })
   })
-  console.log("All authors: ", allAuthorItem)
-
   return allAuthorItem
 
 }
