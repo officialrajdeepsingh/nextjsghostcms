@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@lyrasearch/lyra': ^0.4.12
   '@radix-ui/react-popover': ^1.0.5
   '@tryghost/content-api': ^1.11.7
   '@types/node': 18.15.5
@@ -17,10 +18,12 @@ specifiers:
   react: 18.2.0
   react-dom: 18.2.0
   react-icons: ^4.8.0
+  react-use-flexsearch: ^0.1.1
   tailwindcss: ^3.2.7
   typescript: 5.0.2
 
 dependencies:
+  '@lyrasearch/lyra': 0.4.12
   '@radix-ui/react-popover': 1.0.5_zula6vjvt3wdocc4mwcxqa6nzi
   '@tryghost/content-api': 1.11.7
   '@types/node': 18.15.5
@@ -34,6 +37,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.8.0_react@18.2.0
+  react-use-flexsearch: 0.1.1_react@18.2.0
   typescript: 5.0.2
 
 devDependencies:
@@ -130,6 +134,12 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: false
+
+  /@lyrasearch/lyra/0.4.12:
+    resolution: {integrity: sha512-7lcUALhAKUhC4p8h6JJRuZFrOHzNxq0uEgHzTSIAXYfFufA2X0BfBDPABlrFwgJ5GP+LwmjMet2rS3XHvG9xNg==}
+    engines: {node: '>= 16.0.0'}
+    deprecated: Lyra is now called Orama! Install the latest stable version via the @orama/orama package
     dev: false
 
   /@next/env/13.2.4:
@@ -1508,6 +1518,10 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: false
 
+  /flexsearch/0.6.32:
+    resolution: {integrity: sha512-EF1BWkhwoeLtbIlDbY/vDSLBen/E5l/f1Vg7iX5CDymQCamcx1vhlc3tIZxIDplPjgi0jhG37c67idFbjg+v+Q==}
+    dev: false
+
   /flowbite-typography/1.0.3_tailwindcss@3.2.7:
     resolution: {integrity: sha512-UbdQFIIOb7xx2TS+QQrqr79B6ZSkSZurxYWzV0npth6Wns3/j7KfeDJoH9QFU+Zs7zjrvejNtyzgzWLWyCrdiA==}
     peerDependencies:
@@ -2493,6 +2507,15 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.0
+    dev: false
+
+  /react-use-flexsearch/0.1.1_react@18.2.0:
+    resolution: {integrity: sha512-UDRDB26HPcAo0gXNkUYYkcjoYCW4FSWr7Ich4adgVr7bqefJG7fnjlcqnwsKQkbZuteRLYzzox+1FKRTt3Z5vg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      flexsearch: 0.6.32
+      react: 18.2.0
     dev: false
 
   /react/18.2.0:
