@@ -4,7 +4,7 @@ import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
 import Card from "../../Card"
 import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
-
+import { notFound } from 'next/navigation';
 export async function generateStaticParams() {
 
   const allAuthor = await getAllAuthors()
@@ -26,7 +26,13 @@ export async function generateStaticParams() {
 async function Authors({ params }: { params: { slug: string }; }) {
 
   const getAuthor = await getSingleAuthor(params.slug)
+
   const allAuthor = await getSingleAuthorPost(params.slug)
+  if (allAuthor.length === 0) {
+
+    notFound()
+
+  }
 
   return (
     <>
