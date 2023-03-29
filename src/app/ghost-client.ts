@@ -1,4 +1,5 @@
 import GhostContentAPI from "@tryghost/content-api";
+import { error } from "console";
 
 // Create API instance with site credentials
 const api = new GhostContentAPI({
@@ -14,7 +15,7 @@ export async function getPosts() {
       limit: 10
     })
     .catch(err => {
-      console.error(err);
+      throw new Error(err)
     });
 }
 
@@ -26,7 +27,7 @@ export async function getPaginationPosts(page: number) {
       page: page
     })
     .catch(err => {
-      console.error(err);
+      throw new Error(err)
     });
 }
 
@@ -47,21 +48,26 @@ export async function getSingleAuthor(authorSlug: string) {
       slug: authorSlug
     }, { include: ["count.posts"] })
     .catch(err => {
-      console.error(err);
+      console.log(err)
     });
+
 }
 
 export async function getSingleAuthorPost(authorSlug: string) {
-  return await api.posts.browse({ filter: `authors:${authorSlug}` }).catch(err => {
-    console.log(err)
-  })
-}
+  return await api.posts.browse({ filter: `authors:${authorSlug}` })
+    .catch(err => {
+      console.log(err)
+    })
+};
+
 
 export async function getTagPosts(tagSlug: string) {
 
-  return await api.posts.browse({ filter: `tag:${tagSlug}`, include: 'count.posts' }).catch(err => {
-    console.log(err)
-  });
+  return await api.posts.browse({ filter: `tag:${tagSlug}`, include: 'count.posts' })
+    .catch(err => {
+      throw new Error(err)
+    });
+  ;
 
 }
 export async function getAllTags() {
@@ -86,7 +92,8 @@ export async function getAllAuthors() {
       limit: "all"
     })
     .catch(err => {
-      console.error(err);
+
+      throw new Error(err)
     });
 
 
