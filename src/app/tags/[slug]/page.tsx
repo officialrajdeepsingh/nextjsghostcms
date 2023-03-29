@@ -1,6 +1,8 @@
 import React from 'react'
 import Card from "../../Card"
 import { getTagPosts, getAllTags } from "../../ghost-client"
+import { notFound } from 'next/navigation';
+
 
 export async function generateStaticParams() {
 
@@ -22,6 +24,10 @@ export async function generateStaticParams() {
 async function Tag({ params }: { params: { slug: string }; }) {
 
   let tagPosts = await getTagPosts(params.slug)
+
+  if (tagPosts.length === 0) {
+    notFound()
+  }
 
   return (
     <aside aria-label="Related articles" className="py-8 lg:py-24 bg-gray-50 dark:bg-gray-800">
