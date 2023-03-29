@@ -2,10 +2,9 @@ import Newsletter from "../../Newsletter";
 import Link from "next/link";
 import { getSinglePost, getPosts } from "../../ghost-client"
 import Image from "next/image";
-import Script from 'next/script'
 import { FaAngleLeft } from "react-icons/fa";
 import { formatDate } from "../../utility";
-
+import { notFound } from 'next/navigation';
 export async function generateStaticParams() {
   const posts = await getPosts()
 
@@ -19,9 +18,12 @@ async function Read({ params }: { params: { slug: string }; }) {
 
   const getPost = await getSinglePost(params.slug)
 
+  if (!getPost) {
+    notFound()
+  }
 
   return (
-    <> <Script src="https://cdn.jsdelivr.net/ghost/portal@~2.25/umd/portal.min.js" />
+    <>
       <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-white dark:bg-gray-900">
 
         <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
