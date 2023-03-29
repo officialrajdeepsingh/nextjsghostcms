@@ -4,10 +4,10 @@ import Pagination from "./Pagination"
 import * as fs from 'node:fs';
 import { cache } from "react"
 
-
 export default async function Home() {
 
   const getPost = await getPosts()
+
   const AllPostForSerach = await getSearchPosts()
 
   cache(async () => {
