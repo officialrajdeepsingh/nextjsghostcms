@@ -1,7 +1,7 @@
-Next 13 (appDir), Ghost CMS combine both package build a static site blog. You use 
+Set up your blog with Next 13 (appDir) and Ghost CMS; combine both packages with building a static site blog.
 
 ## Getting Started
-First clone the repo with `git clone` command
+First clone the repo with the `git clone` command
 
 ## Install
 ```bash
@@ -19,7 +19,7 @@ yarn install
 # or
 pnpm install
 ```
-Envirement Variable ( Require)
+Environment Variable ( Require )
 Adding en
 ```
 GHOST_URL=https://nextghost.blog
@@ -27,7 +27,7 @@ GHOST_KEY=d762c******0a299
 
 ```
 
-First, run the development server:
+then run your development server:
 
 ```bash
 npm run dev
