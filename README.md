@@ -1,8 +1,31 @@
-Next ghost is template provide 
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Next 13 (appDir), Ghost CMS combine both package build a static site blog. You use 
 
 ## Getting Started
+First clone the repo with `git clone` command
+
+## Install
+```bash
+#  clone the repo
+git clone  https://github.com/officialrajdeepsingh/nextjsghostcms.git
+
+# go to clone folder
+cd nextjsghostcms
+
+#  install all depe
+
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+Envirement Variable ( Require)
+Adding en
+```
+GHOST_URL=https://nextghost.blog
+GHOST_KEY=d762c******0a299
+
+```
 
 First, run the development server:
 
@@ -13,6 +36,8 @@ yarn dev
 # or
 pnpm dev
 ```
+
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
