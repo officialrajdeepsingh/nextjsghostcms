@@ -1,5 +1,4 @@
 import GhostContentAPI from "@tryghost/content-api";
-import { error } from "console";
 
 // Create API instance with site credentials
 const api = new GhostContentAPI({
