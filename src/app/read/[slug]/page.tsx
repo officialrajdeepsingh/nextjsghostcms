@@ -1,4 +1,4 @@
-import Newsletter from "../../Newsletter";
+import Newsletter from "./Newsletter";
 import Link from "next/link";
 import { getSinglePost, getPosts } from "../../ghost-client"
 import Image from "next/image";
