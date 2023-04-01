@@ -1,7 +1,8 @@
 import GhostContentAPI from "@tryghost/content-api";
 
-// Create API instance with site credentials
-const api = new GhostContentAPI({
+// Create API instance with site credentialE
+
+export const api = new GhostContentAPI({
   url: process.env.GHOST_URL as string,
   key: process.env.GHOST_KEY as string,
   version: "v5.0"
@@ -95,6 +96,8 @@ export async function getAllAuthors() {
       throw new Error(err)
     });
 
-
 }
 
+export async function getNavigation() {
+  return await api.settings.browse()
+}
