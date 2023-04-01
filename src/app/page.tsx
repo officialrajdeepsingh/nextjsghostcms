@@ -2,7 +2,18 @@ import { getPosts, getSearchPosts } from "./ghost-client"
 import Card from './Card'
 import Pagination from "./Pagination"
 import * as fs from 'node:fs';
-import { cache } from "react"
+import { cache } from "react";
+import type { Metadata } from 'next'
+import { getNavigation } from "./ghost-client"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const Metadata = await getNavigation()
+  return {
+    title: Metadata.title,
+    description: Metadata.description,
+    keywords: ['Next.js', 'React', 'JavaScript'],
+  }
+}
 
 export default async function Home() {
 
@@ -29,7 +40,6 @@ export default async function Home() {
     }
 
   })
-
 
   return (
     <>
