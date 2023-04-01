@@ -5,6 +5,37 @@ import Image from "next/image";
 import { FaAngleLeft } from "react-icons/fa";
 import { formatDate } from "../../utility";
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
+  const Metadata = await getSinglePost(params.slug)
+
+
+  let tags = Metadata.tags.map(item => item.name)
+
+  return {
+    title: Metadata.title,
+    description: Metadata.description,
+    keywords: tags,
+    openGraph: {
+      title: Metadata.title,
+      description: Metadata.excpet,
+      url: Metadata.url,
+      keywords: tags,
+      images: [
+        {
+          url: Metadata.feature_image,
+          width: 800,
+          height: 600,
+        },
+      ],
+      locale: 'en-US',
+      type: 'website',
+    },
+
+
+  }
+}
+
 export async function generateStaticParams() {
   const posts = await getPosts()
 
