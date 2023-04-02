@@ -8,6 +8,6 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require('flowbite-typography'),
+    require('@tailwindcss/typography')
   ],
 }
