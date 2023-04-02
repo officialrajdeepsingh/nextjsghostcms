@@ -5,6 +5,17 @@ import Card from "../../Card"
 import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({ params }: { params: { slug: string }; }): Metadata {
+  const Metadata = await getSingleAuthor(params.slug)
+
+  return {
+    title: Metadata.name,
+    description: Metadata.bio,
+    keywords: ['Next.js', 'React', 'JavaScript'],
+  }
+}
+
 export async function generateStaticParams() {
 
   const allAuthor = await getAllAuthors()
@@ -36,7 +47,7 @@ async function Authors({ params }: { params: { slug: string }; }) {
 
   return (
     <>
-      <section className="bg-white dark:bg-gray-900">
+      <section className="dark:bg-gray-900">
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
 
           <div className=" p-10 text-gray-500 sm:text-lg dark:text-gray-400">
@@ -82,7 +93,7 @@ async function Authors({ params }: { params: { slug: string }; }) {
         </div>
       </section>
 
-      <aside aria-label="Related articles" className="py-8 lg:py-24 bg-gray-50 dark:bg-gray-800">
+      <aside aria-label="Related articles" className="py-8 lg:py-24 dark:bg-gray-800">
         <div className="px-4 mx-auto max-w-screen-xl">
 
           <h2 className="mb-8 text-2xl font-bold text-gray-900 dark:text-white">
