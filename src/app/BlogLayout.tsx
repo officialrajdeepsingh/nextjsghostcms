@@ -11,7 +11,7 @@ function Layout({ setting, children }: {
   return <ThemeProvider attribute="class">
     <Header setting={setting} />
     {children}
-    <Footer />
+    <Footer setting={setting} />
   </ThemeProvider>
 
 }
