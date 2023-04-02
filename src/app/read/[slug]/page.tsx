@@ -7,6 +7,7 @@ import { formatDate } from "../../utility";
 import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
+
   const Metadata = await getSinglePost(params.slug)
 
 
@@ -55,11 +56,11 @@ async function Read({ params }: { params: { slug: string }; }) {
 
   return (
     <>
-      <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-white dark:bg-gray-900">
+      <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 dark:bg-gray-900">
 
         <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
 
-          <article className="mx-auto w-full max-w-3xl format format-xl sm:format-base  format-blue dark:format-invert">
+          <article className="mx-auto w-full max-w-3xl prose prose-xl prose-p:text-gray-800  dark:prose-p:text-gray-100 sm:prose-base prose-a:no-underline prose-blue dark:prose-invert">
 
             <div className="flex mb-4 w-full justify-between">
 
