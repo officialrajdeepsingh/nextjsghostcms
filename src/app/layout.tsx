@@ -12,11 +12,19 @@ export default function RootLayout({
 }) {
 
   const settings = use(getNavigation())
+
+
+  let backgroundColor = `bg-[${settings.accent_color}]`
+
   return (
 
     <html className='light' lang="en">
 
-      <body className='bg-transparent dark:bg-gray-900'>
+    <body
+    style={{
+  '--bg-color': settings.accent_color,
+      }}
+    className={` bg-[--bg-color] dark:bg-gray-900`}>
 
         <BlogLayout setting={settings}>
 
