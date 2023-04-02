@@ -3,7 +3,8 @@ import SocialIcons from "./SocialIcons";
 import Image from "next/image";
 function Header({ setting }) {
 
-  console.log(setting)
+console.log(setting)
+
   return (
     <header className="px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full">
 
@@ -28,7 +29,7 @@ function Header({ setting }) {
           </ul>
 
         </div>
-        <SocialIcons />
+        <SocialIcons setting={setting}/>
       </div>
 
     </header >
