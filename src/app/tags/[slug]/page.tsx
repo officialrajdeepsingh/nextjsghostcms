@@ -30,7 +30,7 @@ async function Tag({ params }: { params: { slug: string }; }) {
   }
 
   return (
-    <aside aria-label="Related articles" className="py-8 lg:py-24 bg-gray-50 dark:bg-gray-800">
+    <aside aria-label="Related articles" className="py-8 lg:py-24 dark:bg-gray-800">
       <div className="px-4 mx-auto max-w-screen-xl">
 
         <h2 className="mb-8 text-2xl font-bold text-gray-900 dark:text-white">
