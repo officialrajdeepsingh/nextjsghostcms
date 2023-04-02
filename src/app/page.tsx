@@ -8,6 +8,9 @@ import { getNavigation } from "./ghost-client"
 
 export async function generateMetadata(): Promise<Metadata> {
   const Metadata = await getNavigation()
+
+
+
   return {
     title: Metadata.title,
     description: Metadata.description,
