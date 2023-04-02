@@ -5,6 +5,7 @@ import Card from "../../Card"
 import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Metadata {
   const Metadata = await getSingleAuthor(params.slug)
