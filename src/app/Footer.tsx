@@ -2,7 +2,7 @@ import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 import Link from "next/link";
 
 
-function Footer() {
+function Footer({ setting }) {
 
   return (
 
@@ -17,21 +17,24 @@ function Footer() {
         <div className="flex md:order-2">
 
           <ul className="flex p-4 flex-row md:space-x-8 md:mt-0 md:text-sm font-medium">
-            <li>
-              <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
-                <FaGithub />
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
-                <FaTwitter />
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white ">
-                <FaLinkedin />
-              </Link>
-            </li>
+
+            {
+              setting.twitter !== null ? <li>
+                <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
+                  <FaTwitter />
+                </Link>
+              </li> : " "
+
+            }
+
+            {
+              setting.facebook !== null ? <li>
+                <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white ">
+                  <FaFacebook />
+                </Link>
+              </li> : " "
+
+            }
 
           </ul>
         </div>
