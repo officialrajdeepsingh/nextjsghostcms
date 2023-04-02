@@ -1,15 +1,13 @@
 "use client"
 
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaSun, FaRegMoon } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaSun, FaRegMoon } from "react-icons/fa";
 import { useTheme } from 'next-themes'
 import Link from "next/link";
-
-
 import dynamic from 'next/dynamic'
 
 const Search = dynamic(() => import('./Search'))
 
-function SocialIcons() {
+function SocialIcons({ setting }) {
 
   const { theme, setTheme } = useTheme()
 
@@ -21,26 +19,24 @@ function SocialIcons() {
         <Search />
       </li>
 
-      <li>
-        <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
-          <FaTwitter />
-        </Link>
-      </li>
-      <li>
-        <Link href="#"
-          className="block py-2 pl-3 pr-4 text-gray-700 rounded  hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white"> <FaFacebook />
-        </Link>
-      </li>
-      <li>
-        <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white">
-          <FaLinkedin />
-        </Link>
-      </li>
-      <li>
-        <Link href="#" className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white">
-          <FaInstagram />
-        </Link>
-      </li>
+      {
+        setting.twitter !== null ? <li>
+          <Link target="_blank" href={`https://twitter.com/${setting.twitter}`} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
+            <FaTwitter />
+          </Link>
+        </li> : ""
+
+      }
+
+      {
+        setting.facebook !== null ? <li>
+          <Link target="_blank" href={`https://www.facebook.com/${setting.facebook}`}
+            className="block py-2 pl-3 pr-4 text-gray-700 rounded  hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white"> <FaFacebook />
+          </Link>
+        </li> : " "
+
+      }
+
       <li>
         <button className="block py-2 pl-3 pr-4 rounded md:p-0" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
           {theme === "dark" ? <FaSun /> : <FaRegMoon />}
