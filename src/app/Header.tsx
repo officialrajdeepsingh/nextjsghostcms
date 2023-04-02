@@ -3,15 +3,14 @@ import SocialIcons from "./SocialIcons";
 import Image from "next/image";
 function Header({ setting }) {
 
-  console.log(setting.logo, "Header : ", setting)
-
+  console.log(setting)
   return (
-    <header className="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full">
+    <header className="px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full">
 
       <div className="container flex flex-wrap items-center justify-between mx-auto">
 
         <Link href="/" className="flex items-center">
-          <Image alt={setting.title} width={200} height={100} src={setting.logo} className="self-center text-xl font-semibold whitespace-nowrap dark:text-white" />
+          {setting.logo !== null ? <Image alt={setting.title} width={200} height={100} src={setting.logo} className="self-center text-xl font-semibold whitespace-nowrap dark:text-white" /> : setting.title}
         </Link>
         <div className="flex md:order-2">
 
