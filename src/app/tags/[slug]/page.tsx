@@ -6,11 +6,11 @@ import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Metadata {
 
-  const Metadata = await getAllTags(params?.slug)
+  const metaData = await getAllTags(params?.slug)
 
   return {
-    title: Metadata?.title,
-    description: Metadata?.description,
+    title: metaData?.title,
+    description: metaData?.description,
   }
 
 }
