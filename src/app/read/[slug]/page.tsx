@@ -8,38 +8,32 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
-  const Metadata = await getSinglePost(params.slug)
+  const metaData = await getSinglePost(params.slug)
 
-
-  let tags = Metadata.tags.map(item => item.name)
+  let tags = metaData?.tags.map(item => item.name)
 
   return {
-    title: Metadata.title,
-    description: Metadata.description,
+    title: metaData.title,
+    description: metaData.description,
     keywords: tags,
     openGraph: {
-      title: Metadata.title,
-      description: Metadata.excpet,
-      url: Metadata.url,
+      title: metaData.title,
+      description: metaData.excpet,
+      url: metaData.url,
       keywords: tags,
       images: [
         {
-          url: Metadata.feature_image,
-          width: 800,
-          height: 600,
+          url: metaData.feature_image,
         },
       ],
-      locale: 'en-US',
+      locale: metaData.locale,
       type: 'website',
     },
-
-
   }
 }
 
 export async function generateStaticParams() {
   const posts = await getPosts()
-
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -68,8 +62,8 @@ async function Read({ params }: { params: { slug: string }; }) {
                 <FaAngleLeft /> Back
               </Link>
 
-              <Link href={`/tags/${getPost.primary_tag.slug}`}>
-                # {getPost.primary_tag.name}
+              <Link href={`/tags/${getPost?.primary_tag.slug}`}>
+                # {getPost?.primary_tag.name}
               </Link>
 
             </div>
@@ -90,9 +84,9 @@ async function Read({ params }: { params: { slug: string }; }) {
 
                   <Image width={32} height={32} className="mr-4 w-10 h-10 rounded-full" src={getPost.primary_author.profile_image} alt={getPost.primary_author.name} />
 
-                  <Link href={`/authors/${getPost.primary_author.slug}`} rel="author" className="text-xl font-bold text-gray-900 dark:text-white">{getPost.primary_author.name}</Link>
+                  <Link href={`/authors/${getPost.primary_author.slug}`} rel="author" className="text-xl font-bold text-gray-800 dark:text-white">{getPost.primary_author.name}</Link>
 
-                  <time className="text-base font-light text-gray-500 dark:text-gray-400 mx-1" dateTime={"2022-02-08".toString()} title="February 8th, 2022">
+                  <time className="text-base font-light text-gray-800 dark:text-white mx-1" dateTime={"2022-02-08".toString()} title="February 8th, 2022">
                     {formatDate(getPost.published_at)}
                   </time>
 
