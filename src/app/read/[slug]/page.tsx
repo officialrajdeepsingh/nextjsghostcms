@@ -5,9 +5,9 @@ import Image from "next/image";
 import { FaAngleLeft } from "react-icons/fa";
 import { formatDate } from "../../utility";
 import { notFound } from 'next/navigation';
+import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
-
   const Metadata = await getSinglePost(params.slug)
 
 
