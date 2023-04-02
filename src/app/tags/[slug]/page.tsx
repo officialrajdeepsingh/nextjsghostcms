@@ -2,6 +2,18 @@ import React from 'react'
 import Card from "../../Card"
 import { getTagPosts, getAllTags } from "../../ghost-client"
 import { notFound } from 'next/navigation';
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+
+  const Metadata = await getAllTags(params?.slug)
+
+  return {
+    title: Metadata?.title,
+    description: Metadata?.description,
+  }
+
+}
 
 
 export async function generateStaticParams() {
@@ -10,7 +22,7 @@ export async function generateStaticParams() {
 
   let allTagsItem: { slug: string }[] = []
 
-  allTags.map(item => {
+  allTags?.map(item => {
     allTagsItem.push({
       slug: item.slug,
     })
