@@ -1,17 +1,20 @@
+// @ts-nocheck
 import { getPaginationPosts, getPosts, getNavigation } from "../../ghost-client"
 import Card from '../../Card'
 import PaginationItem from "../../Pagination"
 import type { Metadata } from "next";
-export async function generateMetadata({ params }: { params: { slug: string }; }): Metadata {
+import type { PostsOrPages } from "@tryghost/content-api";
 
-  const metaData = await getNavigation()
+export async function generateMetadata(): Promise<Metadata> {
+
+  const metaData:Metadata = await getNavigation()
 
   return {
     title: metaData.title,
     description: metaData.description,
     openGraph: {
       title: metaData.title,
-      description: metaData.excpet,
+      description: metaData?.description,
       url: metaData.url,
     },
   }
@@ -20,12 +23,11 @@ export async function generateMetadata({ params }: { params: { slug: string }; }
 
 export async function generateStaticParams() {
 
-  const posts = await getPosts()
+  const posts:PostsOrPages = await getPosts()
 
-  let paginationItem = []
+  let paginationItem: { item: number }[] = []
 
   for (let index = 1; index <= posts?.meta.pagination.pages; index++) {
-
     paginationItem.push({
       item: index,
     })
@@ -40,9 +42,9 @@ export async function generateStaticParams() {
 
 export default async function Pagination({ params }: { params: { item: string }; }) {
 
-  let getParams = Number.parseInt(params.item)
+  let getParams: number = Number.parseInt(params.item)
 
-  const getPost = await getPaginationPosts(getParams)
+  const getPost: PostsOrPages = await getPaginationPosts(getParams)
 
   return (
     <>
