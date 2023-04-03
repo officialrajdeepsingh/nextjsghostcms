@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client"
 
 import React, { useEffect, useState } from 'react';
@@ -5,9 +7,11 @@ import * as Popover from '@radix-ui/react-popover';
 import { FaSearch } from "react-icons/fa";
 import Link from 'next/link';
 import searchData from '../../search.json'
-import type { PostOrPage, PostsOrPages } from "tryghost__content-api"
+import type { PostOrPage } from "@tryghost/content-api"
+
 
 let serachPost: PostOrPage[] = []
+
 
 function Search() {
 
@@ -17,14 +21,13 @@ function Search() {
 
     serachPost.length = 0;
 
-    searchData.map(
-      (item: PostsOrPages) => {
+    searchData.map((item: PostOrPage) => {
 
-        if (item.title.trim().toLowerCase().includes(query?.trim().toLowerCase())) {
-          serachPost.push(item)
-        }
+      if (item?.title.trim().toLowerCase().includes(query?.trim().toLowerCase())) {
+        serachPost.push(item)
       }
-    )
+
+    })
 
   }, [query])
 
@@ -62,8 +65,9 @@ function Search() {
           {
 
             serachPost.length > 0 ? serachPost.map(item => {
+
               return (
-                <div className='my-3'>
+                <div key={item.uuid} className='my-3'>
                   <div className="text-white my-2 py-2 bg-blue-400 dark:bg-gray-900 dark:hover:bg-blue-400 border-none rounded-md dark:text-white">
                     <Link href={`read/${item.slug}`} className="relative inline-flex items-center rounded-lg w-full px-4 py-2 text-sm font-medium">
                       {item.title}
