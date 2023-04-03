@@ -19,7 +19,6 @@ export default function RootLayout({
 
   const settings: UpdateSettings = use(getNavigation())
 
-
   return (
 
     <html className='light' lang="en">
