@@ -70,6 +70,20 @@ export async function getTagPosts(tagSlug: string) {
   ;
 
 }
+
+export async function getSingleTag(tagSlug: string) {
+
+  return await api.tags.read({ slug: tagSlug })
+    .catch(err => {
+      throw new Error(err)
+    });
+  ;
+
+}
+
+
+
+
 export async function getAllTags() {
   return await api.tags.browse({
     limit: "all"
@@ -92,7 +106,6 @@ export async function getAllAuthors() {
       limit: "all"
     })
     .catch(err => {
-
       throw new Error(err)
     });
 
