@@ -22,7 +22,7 @@ pnpm install
 ### Environment Variable ( Require )
 The next setup is adding an environment variable in your nextjs app. without config, and the environment app does not work.
 
-```
+```javascript
 GHOST_URL=https://nextghost.blog
 GHOST_KEY=d762c******0a299
 ```
