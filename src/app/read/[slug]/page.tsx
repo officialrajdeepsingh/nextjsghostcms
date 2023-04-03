@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
 import type { PostOrPage } from "@tryghost/content-api";
 import { format } from 'date-fns'
-import "./cards.min.css"
+import "../../cards.min.css"
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
 
