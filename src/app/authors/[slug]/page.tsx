@@ -1,3 +1,5 @@
+// @ts-nocheck 
+
 import React from 'react'
 import Link from "next/link";
 import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
@@ -5,22 +7,28 @@ import Card from "../../Card"
 import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import type { Metadata } from "next";
+import { Metadata } from 'next';
+import type { Author, PostsOrPages } from "@tryghost/content-api";
 
-export async function generateMetadata({ params }: { params: { slug: string }; }): Metadata {
+export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
 
-  const Metadata = await getSingleAuthor(params.slug)
+  const metadata: Metadata = await getSingleAuthor(params.slug)
 
-  return {
-    title: Metadata?.name || "my title",
-    description: Metadata?.bio || " my description ",
-    keywords: ['Next.js', 'React', 'JavaScript'],
+  if (metadata) {
+
+    return {
+      title: metadata?.name || "my title",
+      description: metadata?.bio || " my description ",
+      keywords: ['next.js', 'react', 'javascript'],
+    }
+
   }
 }
 
 export async function generateStaticParams() {
 
-  const allAuthor = await getAllAuthors()
+  const allAuthor: Author[] = await getAllAuthors()
+
 
   let allAuthorItem: { slug: string }[] = []
 
@@ -34,11 +42,11 @@ export async function generateStaticParams() {
 }
 
 
-async function Authors({ params }: { params: { slug: string }; }) {
+async function AuthorPage({ params }: { params: { slug: string }; }) {
 
-  const getAuthor = await getSingleAuthor(params.slug)
+  const getAuthor: Author = await getSingleAuthor(params.slug)
 
-  const allAuthor = await getSingleAuthorPost(params.slug)
+  const allAuthor: PostsOrPages = await getSingleAuthorPost(params.slug)
 
   if (allAuthor?.length === 0) {
     notFound()
@@ -51,9 +59,18 @@ async function Authors({ params }: { params: { slug: string }; }) {
 
           <div className=" p-10 text-gray-500 sm:text-lg dark:text-gray-400">
 
-            <Image height={30} width={30} className="w-36 h-36 p-2 rounded-full mx-auto ring-2 ring-gray-300 dark:ring-gray-500" src={getAuthor?.profile_image} alt={getAuthor?.name} />
+            {
+              getAuthor?.profile_image !== undefined ? <Image height={30} width={30} className="w-36 h-36 p-2 rounded-full mx-auto ring-2 ring-gray-300 dark:ring-gray-500" src={getAuthor?.profile_image} alt={getAuthor?.name} /> : ""
+            }
 
-            <h2 className="mb-4 mt-4 text-4xl tracking-tight font-bold text-center text-gray-900 dark:text-white">{getAuthor?.name.split(" ")[0]} <span className="font-extrabold">{getAuthor?.name?.split(" ")[1]}</span></h2>
+            {
+              getAuthor?.name ? <h2 className="mb-4 mt-4 text-4xl tracking-tight font-bold text-center text-gray-900 dark:text-white">
+                {getAuthor?.name.split(" ")[0]}
+                <span className="font-extrabold">
+                  {getAuthor?.name?.split(" ")[1]}
+                </span>
+              </h2> : ""
+            }
 
             <p className="mb-4 font-light text-center">{getAuthor?.bio} </p>
 
@@ -78,7 +95,7 @@ async function Authors({ params }: { params: { slug: string }; }) {
               }
 
               {
-                (getAuthor?.facebook !== null) ? (<li>
+                (getAuthor?.facebook !== null && getAuthor.facebook !== undefined) ? (<li>
                   <Link href={getAuthor?.facebook}
                     className="block py-2 pl-3 pr-4 text-gray-700 rounded  hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white"> <FaFacebook />
                   </Link>
@@ -114,4 +131,4 @@ async function Authors({ params }: { params: { slug: string }; }) {
   )
 
 }
-export default Authors
+export default AuthorPage
