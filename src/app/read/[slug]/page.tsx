@@ -1,14 +1,19 @@
+// @ts-nocheck
+
 import Newsletter from "./Newsletter";
 import Link from "next/link";
 import { getSinglePost, getPosts } from "../../ghost-client"
 import Image from "next/image";
 import { FaAngleLeft } from "react-icons/fa";
-import { formatDate } from "../../utility";
 import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
+import type { PostOrPage } from "@tryghost/content-api";
+import { format } from 'date-fns'
+import "./cards.min.css"
 
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
-  const metaData = await getSinglePost(params.slug)
+
+  const metaData: PostOrPage = await getSinglePost(params.slug)
 
   let tags = metaData?.tags.map(item => item.name)
 
@@ -62,9 +67,11 @@ async function Read({ params }: { params: { slug: string }; }) {
                 <FaAngleLeft /> Back
               </Link>
 
-              <Link href={`/tags/${getPost?.primary_tag.slug}`}>
-                # {getPost?.primary_tag.name}
-              </Link>
+              {
+                getPost.primary_tag ? <Link href={`/tags/${getPost?.primary_tag.slug}`}>
+                  # {getPost?.primary_tag.name}
+                </Link> : ""
+              }
 
             </div>
 
@@ -82,13 +89,16 @@ async function Read({ params }: { params: { slug: string }; }) {
 
                 <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
 
-                  <Image width={32} height={32} className="mr-4 w-10 h-10 rounded-full" src={getPost.primary_author.profile_image} alt={getPost.primary_author.name} />
+                  <Image width={32} height={32} className="mr-4 w-10 h-10 rounded-full" src={getPost?.primary_author.profile_image} alt={getPost?.primary_author.name} />
+                  {
+                    getPost.primary_author ? <Link href={`/authors/${getPost?.primary_author.slug}`} rel="author" className="text-xl font-bold text-gray-800 dark:text-white">{getPost?.primary_author.name}</Link> : " "
+                  }
 
-                  <Link href={`/authors/${getPost.primary_author.slug}`} rel="author" className="text-xl font-bold text-gray-800 dark:text-white">{getPost.primary_author.name}</Link>
-
-                  <time className="text-base font-light text-gray-800 dark:text-white mx-1" dateTime={"2022-02-08".toString()} title="February 8th, 2022">
-                    {formatDate(getPost.published_at)}
-                  </time>
+                  {
+                    getPost.published_at ? <time className="text-base font-light text-gray-800 dark:text-white mx-1" dateTime={getPost?.published_at} title={format(new Date(getPost?.published_at), 'yyyy-MM-dd')}>
+                      {format(new Date(getPost?.published_at), 'dd MMMM, yyyy')}
+                    </time> : ""
+                  }
 
                   <div className="text-base w-1 h-1 rounded-full bg-black dark:bg-white mx-1"></div>
 
@@ -104,11 +114,11 @@ async function Read({ params }: { params: { slug: string }; }) {
               <Image className="mx-auto" width={1000} height={250} src={getPost.feature_image} alt={getPost.feature_image_alt} />
               <figcaption className="text-center"
                 dangerouslySetInnerHTML={{
-                  __html: getPost.feature_image_caption
+                  __html: getPost?.feature_image_caption
                 }}></figcaption>
             </figure>
 
-            <div dangerouslySetInnerHTML={{ __html: getPost.html }}></div>
+            <div dangerouslySetInnerHTML={{ __html: getPost?.html }}></div>
 
           </article>
         </div>
