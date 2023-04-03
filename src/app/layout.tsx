@@ -1,9 +1,15 @@
+// @ts-nocheck
+
+
 import "./globals.css";
 import BlogLayout from './BlogLayout'
-import "./cards.min.css"
 import { getNavigation, } from "./ghost-client"
 import { use } from "react"
+import type { Settings } from "tryghost__content-api"
 
+interface UpdateSettings extends Settings {
+  accent_color?: string;
+}
 
 export default function RootLayout({
   children,
@@ -11,7 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-  const settings = use(getNavigation())
+  const settings: UpdateSettings = use(getNavigation())
+
 
   return (
 
@@ -19,7 +26,7 @@ export default function RootLayout({
 
       <body
         style={{
-          '--bg-color': settings.accent_color,
+          '--bg-color': settings?.accent_color ? settings.accent_color : "",
         }}
         className={` bg-[--bg-color] dark:bg-gray-900`}>
 
