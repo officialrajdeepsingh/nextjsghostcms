@@ -1,5 +1,4 @@
 // @ts-nocheck 
-
 import React from 'react'
 import Link from "next/link";
 import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
