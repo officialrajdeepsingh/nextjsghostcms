@@ -22,7 +22,7 @@ function Footer({ setting }: { setting: Settings }) {
 
             {
               setting.twitter !== null ? <li>
-                <Link href={setting.twitter} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
+                <Link target="_blank" href={`https://twitter.com/${setting.twitter}`} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
                   <FaTwitter />
                 </Link>
               </li> : " "
@@ -31,7 +31,7 @@ function Footer({ setting }: { setting: Settings }) {
 
             {
               setting.facebook !== null ? <li>
-                <Link href={setting.facebook} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white ">
+                <Link target="_blank" href={`https://www.facebook.com/${setting.facebook}`} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white ">
                   <FaFacebook />
                 </Link>
               </li> : " "
