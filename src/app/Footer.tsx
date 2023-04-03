@@ -1,8 +1,8 @@
 import { FaTwitter, FaFacebook } from "react-icons/fa";
 import Link from "next/link";
+import type { Settings } from "@tryghost/content-api";
 
-
-function Footer({ setting }) {
+function Footer({ setting }: { setting: Settings }) {
 
   return (
 
