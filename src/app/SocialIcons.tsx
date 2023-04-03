@@ -4,10 +4,11 @@ import { FaFacebook, FaTwitter, FaSun, FaRegMoon } from "react-icons/fa";
 import { useTheme } from 'next-themes'
 import Link from "next/link";
 import dynamic from 'next/dynamic'
+import type { Settings } from "@tryghost/content-api";
 
 const Search = dynamic(() => import('./Search'))
 
-function SocialIcons({ setting }) {
+function SocialIcons({ setting }: { setting: Settings }) {
 
   const { theme, setTheme } = useTheme()
 
