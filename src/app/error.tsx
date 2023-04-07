@@ -9,7 +9,7 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
   }, [error]);
 
   return (
-    <section className="bg-white dark:bg-gray-900 my-16">
+    <section className="dark:bg-gray-900 my-16">
 
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
 
