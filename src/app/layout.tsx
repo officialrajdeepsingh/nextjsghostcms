@@ -1,11 +1,10 @@
 // @ts-nocheck
 
-
 import "./globals.css";
 import BlogLayout from './BlogLayout'
 import { getNavigation, } from "./ghost-client"
 import { use } from "react"
-import type { Settings } from "tryghost__content-api"
+import type { Settings } from "@tryghost/content-api"
 
 interface UpdateSettings extends Settings {
   accent_color?: string;
@@ -15,9 +14,10 @@ export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}) {
+}): JSX.Element {
 
-  const settings: UpdateSettings = use(getNavigation())
+  const settings: UpdateSettings = use(getNavigation());
+
 
   return (
 
