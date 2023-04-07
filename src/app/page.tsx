@@ -2,7 +2,6 @@ import { getPosts, getSearchPosts } from "./ghost-client"
 import Card from './Card'
 import Pagination from "./Pagination"
 import * as fs from 'node:fs';
-import { cache } from "react";
 import type { Metadata } from 'next'
 import { getNavigation } from "./ghost-client"
 
@@ -21,25 +20,24 @@ export default async function Home() {
 
   const AllPostForSerach = await getSearchPosts()
 
-  cache(async () => {
+  // Enable getSearch  
 
-    try {
+  try {
 
-      const jsonString = JSON.stringify(AllPostForSerach)
+    const jsonString = JSON.stringify(AllPostForSerach)
 
-      fs.writeFile('search.json', jsonString, 'utf8', err => {
-        if (err) {
-          console.log('Error writing file', err)
-        } else {
-          console.log('Successfully wrote file')
-        }
-      })
+    fs.writeFile('search.json', jsonString, 'utf8', err => {
+      if (err) {
+        console.log('Error writing file', err)
+      } else {
+        console.log('Successfully wrote file')
+      }
+    })
 
-    } catch (error) {
-      console.log('error : ', error)
-    }
+  } catch (error) {
+    console.log('error : ', error)
+  }
 
-  })
 
   return (
     <>
