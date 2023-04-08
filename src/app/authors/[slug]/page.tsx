@@ -3,12 +3,14 @@ import React from 'react'
 import Link from "next/link";
 import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
 import Card from "../../Card"
-import { getSingleAuthor, getSingleAuthorPost, getAllAuthors } from "../../ghost-client"
+import { getSingleAuthor, getSingleAuthorPosts, getAllAuthors } from "../../ghost-client"
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import type { Author, PostsOrPages } from "@tryghost/content-api";
 
+
+// SEO
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
 
   const metadata: Metadata = await getSingleAuthor(params.slug)
@@ -24,6 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string }; }
   }
 }
 
+// Build Static Site 
 export async function generateStaticParams() {
 
   const allAuthor: Author[] = await getAllAuthors()
@@ -45,7 +48,7 @@ async function AuthorPage({ params }: { params: { slug: string }; }) {
 
   const getAuthor: Author = await getSingleAuthor(params.slug)
 
-  const allAuthor: PostsOrPages = await getSingleAuthorPost(params.slug)
+  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug)
 
   if (allAuthor?.length === 0) {
     notFound()
