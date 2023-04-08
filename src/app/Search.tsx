@@ -10,7 +10,7 @@ import searchData from '../../search.json'
 import type { PostOrPage } from "@tryghost/content-api"
 
 
-let serachPost: PostOrPage[] = []
+let searchPost: PostOrPage[] = []
 
 
 function Search() {
@@ -19,12 +19,12 @@ function Search() {
 
   useEffect(() => {
 
-    serachPost.length = 0;
+    searchPost.length = 0;
 
     searchData.map((item: PostOrPage) => {
 
       if (item?.title.trim().toLowerCase().includes(query?.trim().toLowerCase())) {
-        serachPost.push(item)
+        searchPost.push(item)
       }
 
     })
