@@ -1,9 +1,8 @@
-import { getPosts, getSearchPosts } from "./ghost-client"
+import { getPosts, getSearchPosts, getNavigation} from "./ghost-client"
 import Card from './Card'
 import Pagination from "./Pagination"
 import * as fs from 'node:fs';
 import type { Metadata } from 'next'
-import { getNavigation } from "./ghost-client"
 
 export async function generateMetadata(): Promise<Metadata> {
   const Metadata = await getNavigation()
