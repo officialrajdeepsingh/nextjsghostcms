@@ -53,7 +53,7 @@ export async function getSingleAuthor(authorSlug: string) {
 
 }
 
-export async function getSingleAuthorPost(authorSlug: string) {
+export async function getSingleAuthorPosts(authorSlug: string) {
   return await api.posts.browse({ filter: `authors:${authorSlug}` })
     .catch(err => {
       console.log(err)
