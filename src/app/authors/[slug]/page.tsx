@@ -31,7 +31,6 @@ export async function generateStaticParams() {
 
   const allAuthor: Author[] = await getAllAuthors()
 
-
   let allAuthorItem: { slug: string }[] = []
 
   allAuthor.map(item => {
@@ -48,9 +47,12 @@ async function AuthorPage({ params }: { params: { slug: string }; }) {
 
   const getAuthor: Author = await getSingleAuthor(params.slug)
 
-  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug)
 
-  if (allAuthor?.length === 0) {
+  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug).catch(error => {
+    notFound()
+  })
+
+  if (getAuthor === undefined) {
     notFound()
   }
 
