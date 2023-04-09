@@ -17,23 +17,27 @@ export async function generateMetadata({ params }: { params: { slug: string }; }
 
   let tags = metaData?.tags.map(item => item.name)
 
-  return {
-    title: metaData.title,
-    description: metaData.description,
-    keywords: tags,
-    openGraph: {
+  if (metaData) {
+
+
+    return {
       title: metaData.title,
-      description: metaData.excpet,
-      url: metaData.url,
+      description: metaData.description,
       keywords: tags,
-      images: [
-        {
-          url: metaData.feature_image,
-        },
-      ],
-      locale: metaData.locale,
-      type: 'website',
-    },
+      openGraph: {
+        title: metaData.title,
+        description: metaData.excpet,
+        url: metaData.url,
+        keywords: tags,
+        images: [
+          {
+            url: metaData.feature_image,
+          },
+        ],
+        locale: metaData.locale,
+        type: 'website',
+      },
+    }
   }
 }
 
