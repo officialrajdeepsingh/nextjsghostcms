@@ -5,26 +5,31 @@ import Card from '../../Card'
 import PaginationItem from "../../Pagination"
 import type { Metadata } from "next";
 import type { PostsOrPages } from "@tryghost/content-api";
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {
 
-  const metaData:Metadata = await getNavigation()
+  const metaData: Metadata = await getNavigation()
 
-  return {
-    title: metaData.title,
-    description: metaData.description,
-    openGraph: {
+  // error handling 
+
+  if (metaData) {
+    return {
       title: metaData.title,
-      description: metaData?.description,
-      url: metaData.url,
-    },
+      description: metaData.description,
+      openGraph: {
+        title: metaData.title,
+        description: metaData?.description,
+        url: metaData.url,
+      },
+    }
   }
 }
 
 
 export async function generateStaticParams() {
 
-  const posts:PostsOrPages = await getPosts()
+  const posts: PostsOrPages = await getPosts()
 
   let paginationItem: { item: number }[] = []
 
@@ -46,6 +51,10 @@ export default async function Pagination({ params }: { params: { item: string };
   let getParams: number = Number.parseInt(params.item)
 
   const getPost: PostsOrPages = await getPaginationPosts(getParams)
+
+  if (getPost?.length === 0) {
+    notFound()
+  }
 
   return (
     <>
