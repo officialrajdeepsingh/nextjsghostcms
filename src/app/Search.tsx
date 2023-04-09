@@ -64,7 +64,7 @@ function Search() {
 
           {
 
-            serachPost.length > 0 ? serachPost.map(item => {
+              searchPost.length > 0 ? serachPost.map(item => {
 
               return (
                 <div key={item.uuid} className='my-3'>
