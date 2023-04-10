@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { getSinglePage, getAllPages } from "../../ghost-client"
 import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
