@@ -1,21 +1,33 @@
-import { getPosts, getSearchPosts, getNavigation} from "./ghost-client"
-import Card from './Card'
-import Pagination from "./Pagination"
+import { getPosts, getSearchPosts, getNavigation } from "./ghost-client"
+import Card from './Card';
+import Pagination from "./Pagination";
 import * as fs from 'node:fs';
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata(): Promise<Metadata> {
+
   const Metadata = await getNavigation()
-  return {
-    title: Metadata.title,
-    description: Metadata.description,
-    keywords: ['Next.js', 'React', 'JavaScript'],
+
+  if (Metadata) {
+    return {
+      title: Metadata.title,
+      description: Metadata.description,
+      keywords: ['Next.js', 'React', 'JavaScript'],
+    }
   }
+
 }
 
 export default async function Home() {
 
   const getPost = await getPosts()
+
+  if (getPost) {
+
+    notFound()
+
+  }
 
   const AllPostForSerach = await getSearchPosts()
 
