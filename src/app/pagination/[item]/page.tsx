@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { getPaginationPosts, getPosts, getNavigation } from "../../ghost-client"
 import Card from '../../Card'
 import PaginationItem from "../../Pagination"
