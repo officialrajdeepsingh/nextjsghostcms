@@ -1,4 +1,3 @@
-// @ts-nocheck 
 import React from 'react'
 import Link from "next/link";
 import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
@@ -48,9 +47,7 @@ async function AuthorPage({ params }: { params: { slug: string }; }) {
   const getAuthor: Author = await getSingleAuthor(params.slug)
 
 
-  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug).catch(error => {
-    notFound()
-  })
+  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug)
 
   if (getAuthor === undefined) {
     notFound()
