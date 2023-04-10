@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import Newsletter from "./Newsletter";
 import Link from "next/link";
 import { getSinglePost, getPosts } from "../../ghost-client"
