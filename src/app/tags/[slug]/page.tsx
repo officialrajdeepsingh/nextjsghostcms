@@ -1,5 +1,3 @@
-//  @ts-nocheck
-
 import React from 'react'
 import Card from "../../Card"
 import { getTagPosts, getAllTags, getSingleTag } from "../../ghost-client"
