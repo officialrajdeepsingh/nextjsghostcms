@@ -4,6 +4,7 @@ import Pagination from "./Pagination";
 import * as fs from 'node:fs';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import type { PostsOrPages } from "@tryghost/content-api";
 
 export async function generateMetadata(): Promise<Metadata> {
 
@@ -21,9 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
 
-  const getPost = await getPosts()
+  const getPost: PostsOrPages = await getPosts()
 
-  if (getPost) {
+  if (getPost.length === 0) {
 
     notFound()
 
