@@ -7,10 +7,7 @@ const nextConfig = {
     domains: ["images.unsplash.com", "static.ghost.org", "www.gravatar.com", "localhost"]
   },
   typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true
+    ignoreBuildErrors: false,
   },
 }
 
