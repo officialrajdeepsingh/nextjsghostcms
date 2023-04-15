@@ -2,9 +2,11 @@ import React from 'react'
 import Card from "../../Card"
 import { getTagPosts, getAllTags, getSingleTag } from "../../ghost-client"
 import { notFound } from 'next/navigation';
-import { Metadata } from "next";
+import type { Metadata,NextPage } from "next";
 import type { PostsOrPages, Tag, Tags } from "@tryghost/content-api";
 
+
+// SEO 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
 
   const metaData: Tag = await getSingleTag(params?.slug)
@@ -16,6 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 }
 
+// generate Static Params
 export async function generateStaticParams() {
 
   const allTags: Tags = await getAllTags()
@@ -32,8 +35,9 @@ export async function generateStaticParams() {
 
 }
 
+// component 
 
-async function Tag({ params }: { params: { slug: string }; }) {
+async function Tag({ params }: { params: { slug: string }; }):NextPage {
 
   let tagPosts: PostsOrPages = await getTagPosts(params.slug)
 

@@ -1,22 +1,23 @@
 import { getSinglePage, getAllPages } from "../../ghost-client"
 import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
-import type { PostOrPage } from "@tryghost/content-api";
+import type { PostOrPage, PostsOrPages } from "@tryghost/content-api";
 import "../../cards.min.css"
 
+
+// SEO
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
 
-  const metaData: PostOrPage = await getSinglePage(params.slug)
-
-  let tags = metaData?.tags.map(item => item.name)
+  const metaData = await getSinglePage(params.slug)
 
   if (metaData) {
+    let tags = metaData?.tags.map(item => item.name)
     return {
-      title: metaData.title,
-      description: metaData.excpet,
+      title: metaData?.title,
+      description: metaData?.excerpt,
       keywords: tags,
       openGraph: {
-        title: metaData.title,
+        title: metaData?.title,
         description: metaData.excpet,
         url: metaData.url,
         keywords: tags,
@@ -32,22 +33,26 @@ export async function generateMetadata({ params }: { params: { slug: string }; }
   }
 }
 
+// generate Static Params
+
 export async function generateStaticParams() {
-  const pages = await getAllPages()
+  const pages: PostsOrPages = await getAllPages()
 
   return pages.map((post) => ({
     slug: post.slug,
   }));
 }
 
-
+// Component
 async function Pages({ params }: { params: { slug: string }; }) {
 
-  const getPage = await getSinglePage(params.slug)
+  const getPage: PostOrPage = await getSinglePage(params.slug)
 
-  if (!getPage) {
-    notFound()
-  }
+
+  // Handling 404 
+  // if (getPage) {
+  //   notFound()
+  // }
 
   return (
     <>
@@ -58,7 +63,7 @@ async function Pages({ params }: { params: { slug: string }; }) {
 
 
             <h1 className="mb-14 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">
-              {getPage.title}
+              {getPage?.title}
             </h1>
 
             <div dangerouslySetInnerHTML={{ __html: getPage?.html }}></div>

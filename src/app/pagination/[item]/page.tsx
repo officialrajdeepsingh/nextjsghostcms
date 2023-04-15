@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import type { PostsOrPages } from "@tryghost/content-api";
 import { notFound } from 'next/navigation';
 
+// SEO 
 export async function generateMetadata(): Promise<Metadata> {
 
   const metaData: Metadata = await getNavigation()
@@ -24,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-
+// generate Static Params
 export async function generateStaticParams() {
 
   const posts: PostsOrPages = await getPosts()
@@ -33,17 +34,18 @@ export async function generateStaticParams() {
 
   for (let index = 1; index <= posts?.meta.pagination.pages; index++) {
     paginationItem.push({
-      item: index,
+      item: index.toString(),
     })
-
   }
+
+
 
   return paginationItem
 
 }
 
 
-
+// component 
 export default async function Pagination({ params }: { params: { item: string }; }) {
 
   let getParams: number = Number.parseInt(params.item)

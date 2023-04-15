@@ -9,6 +9,8 @@ import type { PostOrPage } from "@tryghost/content-api";
 import { format } from 'date-fns'
 import "../../cards.min.css"
 
+
+// SEO
 export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
 
   const metaData: PostOrPage = await getSinglePost(params.slug)
@@ -39,6 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string }; }
   }
 }
 
+// generate Static Params
 export async function generateStaticParams() {
   const posts = await getPosts()
   return posts.map((post) => ({
@@ -46,7 +49,7 @@ export async function generateStaticParams() {
   }));
 }
 
-
+// component
 async function Read({ params }: { params: { slug: string }; }) {
 
   const getPost = await getSinglePost(params.slug)
