@@ -49,94 +49,96 @@ export async function getSinglePost(postSlug: string) {
 
 
 // Pages (Page)
-
-export async function getAllPages(): BrowseFunction<PostsOrPages> {
+export async function getAllPages() {
   return await api.pages
     .browse({
       limit: 'all'
     })
-    .catch((error) => { });
-  }
-
-  export async function getSinglePage(pageSlug: string): BrowseFunction<PostOrPage> {
-    return await api.pages.read({
-       pageSlug
-         { include: ["tags"] })
-    .catch((error: Error)  return error
-                                    });
-      
-        
-       A or (Author page)
-        
-          t
-             async function getSingleAuthor(authorSlug: string) {
-            rn await api.authors.read({
-           lug: authorSlug
-       { include: ["count.posts"] })
-    
-                        console.log(error)
-                      });
-        
-      
-        port async function getSingleAuthorPosts(authorSlug: string) {
-      turn await api.posts.browse({ filter: `authors:${authorSlug}` })
-    
-                      console.log(error)
-                      });
-        
-          
-         anc function getAllAuthors() {
-        
-        turn await api.authors
-      rowse({
-          limit: "all"
-      })
-    
-                      console.log(error)
-                        });
-  
-  
-// tag (Tag page)
-        
-       anc function getTagPosts(tagSlug: string) {
-    
-      turn await api.posts.browse({ filter: `tag:${tagSlug}`, include: 'count.posts' })
-        atch((error: Error) => {
-        console.log(error)
+    .catch((error: Error) => {
+      console.log(error)
     });
-  
-    
-  
-     anc function getSingleTag(tagSlug: string) {
-    
-      turn await api.tags.read({ slug: tagSlug })
+}
 
-                    console.log(error)
-                    });
-  
-    
-       async function getAllTags() {
-      rn await api.tags.browse({
+export async function getSinglePage(pageSlug: string) {
+  return await api.pages
+    .read({
+      slug: pageSlug
+    }, { include: ["tags"] })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+}
+
+// Author (Author page)
+
+export async function getSingleAuthor(authorSlug: string) {
+  return await api.authors.read({
+    slug: authorSlug
+  }, { include: ["count.posts"] })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+}
+
+export async function getSingleAuthorPosts(authorSlug: string) {
+  return await api.posts.browse({ filter: `authors:${authorSlug}` })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+};
+
+export async function getAllAuthors() {
+
+  return await api.authors
+    .browse({
       limit: "all"
-      
-
-                    console.log(error)
-                    });
-  
-    
-   Srch 
-    port async function getSearchPosts() {
-      turn await api.posts.browse({ include: ["tags", "authors"], limit: "all" })
-
-                    console.log(error)
-                    });
-  
-    
-   Nigation
-    port async function getNavigation() {
-    turn await api.settings.browse()
-      atch((error: Error) => {
-        console.log(error)
+    })
+    .catch((error: Error) => {
+      console.log(error)
     });
-  
+}
+
+// tag (Tag page)
+
+export async function getTagPosts(tagSlug: string) {
+
+  return await api.posts.browse({ filter: `tag:${tagSlug}`, include: 'count.posts' })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+
+}
+
+export async function getSingleTag(tagSlug: string) {
+
+  return await api.tags.read({ slug: tagSlug })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+}
+
+export async function getAllTags() {
+  return await api.tags.browse({
+    limit: "all"
+  })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+}
+
+// Search 
+export async function getSearchPosts() {
+  return await api.posts.browse({ include: ["tags", "authors"], limit: "all" })
+    .catch((error: Error) => {
+      console.log(error)
+    });
+}
+
+// Navigation
+export async function getNavigation() {
+  return await api.settings.browse()
+    .catch((error: Error) => {
+      console.log(error)
+    });
+
 }
