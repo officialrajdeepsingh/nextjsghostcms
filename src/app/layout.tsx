@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import "./globals.css";
 import BlogLayout from './BlogLayout'
 import { getNavigation, } from "./ghost-client"

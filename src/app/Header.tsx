@@ -1,4 +1,3 @@
-// @ts-nocheck 
 import Link from "next/link";
 import SocialIcons from "./SocialIcons";
 import Image from "next/image";
@@ -14,7 +13,7 @@ function Header({ setting }: { setting: Settings }) {
         <Link href="/" className="flex items-center">
           {setting.logo !== null ?
             <Image
-              alt={setting.title} width={200} height={100} src={setting.logo} className="self-center text-xl font-semibold whitespace-nowrap dark:text-white" />
+              alt={`${setting.title}`} width={200} height={100} src={`${setting.logo}`} className="self-center text-xl font-semibold whitespace-nowrap dark:text-white" />
             : setting.title}
         </Link>
         <div className="flex md:order-2">

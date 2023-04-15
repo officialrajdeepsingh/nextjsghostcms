@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import { FaTwitter, FaFacebook } from "react-icons/fa";
 import Link from "next/link";
