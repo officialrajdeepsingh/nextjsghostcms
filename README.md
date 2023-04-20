@@ -38,3 +38,21 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+#### Note
+Currently, the project is not ready for typescript. That way, I disable typescript on build time in nextjs. 
+```typescript
+
+// next.config.js
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+
+  typescript: {
+    ignoreBuildErrors: true, // ignore typescipt error on build time 
+  },
+  // ....
+}
+
+module.exports = nextConfig
+```
