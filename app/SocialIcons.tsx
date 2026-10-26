@@ -1,50 +1,87 @@
 "use client"
 
-import { FaFacebook, FaTwitter, FaSun, FaRegMoon } from "react-icons/fa";
-import { useTheme } from 'next-themes'
+import { useSyncExternalStore } from "react";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from 'next-themes';
 import Link from "next/link";
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Settings } from "@tryghost/content-api";
 
-const Search = dynamic(() => import('./Search'))
+const Search = dynamic(() => import('@/Search'))
 
-function SocialIcons({ setting }: { setting: Settings }) {
+const emptySubscribe = () => () => { }
 
-  const { theme, setTheme } = useTheme()
+function SocialIcons({ setting }: { setting?: Settings }) {
+  const { resolvedTheme, setTheme } = useTheme();
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
-  return <div className="flex md:order-2">
+  return (
+    <div className="flex items-center gap-1 sm:gap-2">
+      <Search />
 
-    <ul className="flex flex-wrap p-4 md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+      {setting?.twitter ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon-sm" asChild className="text-muted-foreground hover:text-foreground">
+              <Link
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`https://twitter.com/${setting.twitter}`}
+                aria-label="Twitter"
+              >
+                <FaTwitter className="size-3.5" />
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Twitter</TooltipContent>
+        </Tooltip>
+      ) : null}
 
-      <li className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-700 dark:hover:text-blue-700 rounded md:p-0 dark:text-white" aria-current="page">
-        <Search />
-      </li>
+      {setting?.facebook ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon-sm" asChild className="text-muted-foreground hover:text-foreground">
+              <Link
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`https://www.facebook.com/${setting.facebook}`}
+                aria-label="Facebook"
+              >
+                <FaFacebook className="size-3.5" />
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Facebook</TooltipContent>
+        </Tooltip>
+      ) : null}
 
-      {
-        setting.twitter !== null ? <li>
-          <Link target="_blank" href={`https://twitter.com/${setting.twitter}`} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
-            <FaTwitter />
-          </Link>
-        </li> : ""
-
-      }
-
-      {
-        setting.facebook !== null ? <li>
-          <Link target="_blank" href={`https://www.facebook.com/${setting.facebook}`}
-            className="block py-2 pl-3 pr-4 text-gray-700 rounded  hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white"> <FaFacebook />
-          </Link>
-        </li> : " "
-
-      }
-
-      <li>
-        <button className="block py-2 pl-3 pr-4 rounded md:p-0" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-          {theme === "dark" ? <FaSun /> : <FaRegMoon />}
-        </button>
-      </li>
-    </ul>
-  </div>;
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            aria-label="Toggle theme"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            {mounted ? (
+              resolvedTheme === "dark" ? (
+                <Sun className="size-4 transition-transform duration-200" />
+              ) : (
+                <Moon className="size-4 transition-transform duration-200" />
+              )
+            ) : (
+              <Moon className="size-4" />
+            )}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Toggle theme</TooltipContent>
+      </Tooltip>
+    </div>
+  );
 }
 
-export default SocialIcons
+export default SocialIcons;
