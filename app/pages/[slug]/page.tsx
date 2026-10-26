@@ -1,78 +1,100 @@
-import { getSinglePage, getAllPages } from "../../ghost-client"
-import { notFound } from 'next/navigation';
-import type { Metadata } from "next";
-import type { PostOrPage, PostsOrPages } from "@tryghost/content-api";
-import "../../cards.min.css"
+import Image from "next/image"
+import Link from "next/link"
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
+import { getSinglePage, getAllPages, getSettings } from "@/ghost-client"
+import { generateGhostMetadata } from "@/seo"
+import "@/cards.min.css"
 
+type Params = Promise<{ slug: string }>
 
-// SEO
-export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Params }): Promise<Metadata> {
+  const params = await props.params
+  const [metaData, settings] = await Promise.all([
+    getSinglePage(params.slug),
+    getSettings(),
+  ])
 
-  const metaData = await getSinglePage(params.slug)
-
-  if (metaData) {
-    let tags = metaData?.tags.map(item => item.name)
+  if (!metaData) {
     return {
-      title: metaData?.title,
-      description: metaData?.excerpt,
-      keywords: tags,
-      openGraph: {
-        title: metaData?.title,
-        description: metaData.excpet,
-        url: metaData.url,
-        keywords: tags,
-        images: [
-          {
-            url: metaData.feature_image,
-          },
-        ],
-        locale: metaData.locale,
-        type: 'website',
-      },
+      title: "Not Found",
     }
   }
+
+  return generateGhostMetadata(metaData, {
+    fallbackTitle: settings?.title || "Page",
+    siteName: settings?.title,
+    type: "website",
+  })
 }
 
-// generate Static Params
-
 export async function generateStaticParams() {
-  const pages: PostsOrPages = await getAllPages()
+  const pages = await getAllPages()
+  if (!pages || !Array.isArray(pages)) return []
 
   return pages.map((post) => ({
     slug: post.slug,
-  }));
+  }))
 }
 
-// Component
-async function Pages({ params }: { params: { slug: string }; }) {
+async function Pages(props: { params: Params }) {
+  const params = await props.params
+  const page = await getSinglePage(params.slug)
 
-  const getPage: PostOrPage = await getSinglePage(params.slug)
-
-
-  // Handling 404 
-  // if (getPage) {
-  //   notFound()
-  // }
+  if (!page) {
+    notFound()
+  }
 
   return (
-    <>
-      <main className="pt-8 pb-16 lg:pt-16 lg:pb-24 dark:bg-gray-900">
-        <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
+    <div className="min-h-screen py-8 lg:py-14">
+      <main className="container mx-auto px-4 max-w-4xl">
+        <div className="mb-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors group"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            Back to Home
+          </Link>
+        </div>
 
-          <article className="mx-auto w-full max-w-3xl prose prose-xl prose-p:text-gray-800  dark:prose-p:text-gray-100 sm:prose-base prose-a:no-underline prose-blue dark:prose-invert">
-
-
-            <h1 className="mb-14 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">
-              {getPage?.title}
+        <article className="mx-auto w-full">
+          <header className="mb-10 text-center sm:text-left">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-[1.18] mb-4">
+              {page.title}
             </h1>
 
-            <div dangerouslySetInnerHTML={{ __html: getPage?.html }}></div>
+            {page.custom_excerpt || page.excerpt ? (
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed font-normal">
+                {page.custom_excerpt || page.excerpt}
+              </p>
+            ) : null}
+          </header>
 
-          </article>
-        </div>
+          {page.feature_image ? (
+            <figure className="mb-12">
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/60 bg-muted shadow-sm">
+                <Image
+                  src={page.feature_image}
+                  alt={page.feature_image_alt || page.title || "Page feature image"}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 896px"
+                  className="object-cover"
+                />
+              </div>
+            </figure>
+          ) : null}
+
+          <div
+            className="prose prose-neutral dark:prose-invert max-w-none text-foreground/90 font-normal leading-relaxed text-base sm:text-lg prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:underline-offset-4 prose-img:rounded-xl prose-img:shadow-sm"
+            dangerouslySetInnerHTML={{ __html: page.html || "" }}
+          />
+        </article>
       </main>
-    </>
+    </div>
   )
-
 }
+
 export default Pages
