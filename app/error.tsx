@@ -1,41 +1,67 @@
-'use client'; // Error components must be Client components
-import React from 'react';
-import { useEffect } from 'react';
-import Link from 'next/link';
+"use client"
 
+import { useEffect } from "react"
+import Link from "next/link"
+import { AlertCircle, RotateCcw, Home } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
-export default function Error({ error, reset }: { error: Error; reset: () => void; }) {
-
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
   useEffect(() => {
-    console.error(error);
-  }, [error]);
+    console.error("App error:", error)
+  }, [error])
 
   return (
-    <section className="dark:bg-gray-900 my-16">
-
-      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-
-        <div className="mx-auto max-w-screen-sm text-center">
-
-          <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">Something wrong</h1>
-          <p className="mb-4 text-lg p-2 font-light bg-red-500 text-white dark:bg-red-400 dark:text-white">{error.message}</p>
-
-          <div className='flex justify-around mt-2'>
-
-            <Link href="#" className="inline-flex bg-gray-600 text-white hover:bg-gray-700 focus:ring-4 font-medium rounded-lg text-sm p-2
-                text-center">Back to Homepage</Link>
-
-            <button className='bg-gray-600 text-white rounded-lg p-2' onClick={() => reset()}>
-              Try again
-            </button>
-
-
+    <div className="container mx-auto px-4 py-20 max-w-xl text-center">
+      <Card className="border border-destructive/30 bg-card rounded-2xl shadow-sm p-8 sm:p-12">
+        <CardContent className="flex flex-col items-center p-0">
+          <div className="h-16 w-16 rounded-full bg-destructive/10 text-destructive flex items-center justify-center mb-6">
+            <AlertCircle className="h-8 w-8" />
           </div>
 
-        </div>
+          <span className="text-xs font-semibold uppercase tracking-widest text-destructive mb-2">
+            Unexpected Error
+          </span>
 
-      </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+            Unable to load content
+          </h1>
 
-    </section>
-  );
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-6">
+            An issue occurred while attempting to fetch or render this story. You can retry the request or return home.
+          </p>
+
+          {error?.message ? (
+            <div className="w-full bg-muted/60 border border-border/60 rounded-lg p-3 text-xs font-mono text-muted-foreground text-left overflow-x-auto mb-6 max-h-32">
+              {error.message}
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Button
+              onClick={() => reset()}
+              variant="default"
+              className="gap-2 rounded-lg font-medium shadow-xs"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Try Again
+            </Button>
+
+            <Button asChild variant="outline" className="gap-2 rounded-lg font-medium">
+              <Link href="/">
+                <Home className="h-4 w-4" />
+                Return Home
+              </Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
