@@ -1,135 +1,177 @@
-import React from 'react'
-import Link from "next/link";
-import { FaFacebook, FaTwitter, FaGlobe } from "react-icons/fa";
-import Card from "../../Card"
-import { getSingleAuthor, getSingleAuthorPosts, getAllAuthors } from "../../ghost-client"
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import type { Author, PostsOrPages } from "@tryghost/content-api";
+import Link from "next/link"
+import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import type { PostOrPage } from "@tryghost/content-api"
+import { Globe, BookOpen, ArrowLeft } from "lucide-react"
+import { FaTwitter, FaFacebook } from "react-icons/fa"
+import Card from "@/Card"
+import { getSingleAuthor, getSingleAuthorPosts, getAllAuthors, getSettings } from "@/ghost-client"
+import { generateGhostMetadata } from "@/seo"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
+type Params = Promise<{ slug: string }>
 
-// SEO
-export async function generateMetadata({ params }: { params: { slug: string }; }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Params }): Promise<Metadata> {
+  const params = await props.params
+  const [author, settings] = await Promise.all([
+    getSingleAuthor(params.slug),
+    getSettings(),
+  ])
 
-  const metadata: Metadata = await getSingleAuthor(params.slug)
-
-  if (metadata) {
-
+  if (!author) {
     return {
-      title: metadata?.name || "my title",
-      description: metadata?.bio || " my description ",
-      keywords: ['next.js', 'react', 'javascript'],
+      title: "Author Not Found",
     }
-
   }
-}
 
-// Build Static Site 
-export async function generateStaticParams() {
-
-  const allAuthor: Author[] = await getAllAuthors()
-
-  let allAuthorItem: { slug: string }[] = []
-
-  allAuthor.map(item => {
-    allAuthorItem.push({
-      slug: item.slug,
-    })
+  return generateGhostMetadata(author, {
+    fallbackTitle: settings?.title || "Author",
+    siteName: settings?.title,
+    type: "profile",
+    keywords: ["next.js", "ghost", "editorial"],
   })
-  return allAuthorItem
-
 }
 
+export async function generateStaticParams() {
+  const allAuthor = await getAllAuthors()
+  if (!allAuthor || !Array.isArray(allAuthor)) return []
 
-async function AuthorPage({ params }: { params: { slug: string }; }) {
+  return allAuthor.map((item) => ({
+    slug: item.slug,
+  }))
+}
 
-  const getAuthor: Author = await getSingleAuthor(params.slug)
+async function AuthorPage(props: { params: Params }) {
+  const params = await props.params
+  const author = await getSingleAuthor(params.slug)
+  const posts = await getSingleAuthorPosts(params.slug)
 
-
-  const allAuthor: PostsOrPages = await getSingleAuthorPosts(params.slug)
-
-  if (getAuthor === undefined) {
+  if (!author) {
     notFound()
   }
 
+  const authorInitials = author.name
+    ? author.name
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "AU"
+
   return (
-    <>
-      <section className="dark:bg-gray-900">
-        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+    <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
+      <div className="mb-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+          Back to all stories
+        </Link>
+      </div>
 
-          <div className=" p-10 text-gray-500 sm:text-lg dark:text-gray-400">
+      {/* Author Header Banner */}
+      <section className="relative overflow-hidden rounded-2xl border border-border/70 bg-card p-8 sm:p-12 mb-12 text-center">
+        <div className="flex flex-col items-center max-w-2xl mx-auto">
+          <Avatar className="h-28 w-28 sm:h-32 sm:w-32 border-4 border-background shadow-md mb-6">
+            {author.profile_image ? (
+              <AvatarImage src={author.profile_image} alt={author.name || "Author"} />
+            ) : null}
+            <AvatarFallback className="text-2xl font-bold bg-muted">
+              {authorInitials}
+            </AvatarFallback>
+          </Avatar>
 
-            {
-              getAuthor?.profile_image !== undefined ? <Image height={30} width={30} className="w-36 h-36 p-2 rounded-full mx-auto ring-2 ring-gray-300 dark:ring-gray-500" src={getAuthor?.profile_image} alt={getAuthor?.name} /> : ""
-            }
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
+            {author.name}
+          </h1>
 
-            {
-              getAuthor?.name ? <h2 className="mb-4 mt-4 text-4xl tracking-tight font-bold text-center text-gray-900 dark:text-white">
-                {getAuthor?.name.split(" ")[0]}
-                <span className="font-extrabold">
-                  {getAuthor?.name?.split(" ")[1]}
-                </span>
-              </h2> : ""
-            }
+          <div className="flex items-center gap-2 mb-4">
+            <Badge variant="secondary" className="gap-1 font-medium text-xs">
+              <BookOpen className="h-3 w-3" />
+              {posts?.length || 0} {posts?.length === 1 ? "story" : "stories"}
+            </Badge>
+            {author.location ? (
+              <Badge variant="outline" className="text-xs text-muted-foreground">
+                📍 {author.location}
+              </Badge>
+            ) : null}
+          </div>
 
-            <p className="mb-4 font-light text-center">{getAuthor?.bio} </p>
+          {author.bio ? (
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-6 font-normal">
+              {author.bio}
+            </p>
+          ) : null}
 
+          {/* Social Links */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {author.website ? (
+              <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 rounded-lg text-xs">
+                <Link href={author.website} target="_blank" rel="noopener noreferrer">
+                  <Globe className="h-3.5 w-3.5" />
+                  Website
+                </Link>
+              </Button>
+            ) : null}
 
-            <ul className="flex flex-wrap p-4 justify-center md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+            {author.twitter ? (
+              <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 rounded-lg text-xs">
+                <Link
+                  href={`https://twitter.com/${author.twitter.replace(/^@/, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTwitter className="h-3.5 w-3.5" />
+                  Twitter
+                </Link>
+              </Button>
+            ) : null}
 
-              {
-                (getAuthor?.website !== null) ? (<li>
-                  <Link href={getAuthor?.website} className="block py-2 pl-3 pr-4 text-gray-700 hover:text-blue-700 dark:hover:text-blue-700 rounded md:p-0 dark:text-white" aria-current="page">
-                    <FaGlobe />
-                  </Link> </li>) : " "
-
-
-              }
-
-              {
-                (getAuthor?.twitter !== null) ? (<li>
-                  <Link href={getAuthor?.twitter} className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white" aria-current="page">
-                    <FaTwitter />
-                  </Link>
-                </li>) : " "
-              }
-
-              {
-                (getAuthor?.facebook !== null && getAuthor.facebook !== undefined) ? (<li>
-                  <Link href={getAuthor?.facebook}
-                    className="block py-2 pl-3 pr-4 text-gray-700 rounded  hover:text-blue-700 dark:hover:text-blue-700 md:p-0 dark:text-white"> <FaFacebook />
-                  </Link>
-                </li>) : " "
-
-              }
-
-            </ul>
-
+            {author.facebook ? (
+              <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 rounded-lg text-xs">
+                <Link
+                  href={`https://facebook.com/${author.facebook}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook className="h-3.5 w-3.5" />
+                  Facebook
+                </Link>
+              </Button>
+            ) : null}
           </div>
         </div>
       </section>
 
-      <aside aria-label="Related articles" className="py-8 lg:py-24 dark:bg-gray-800">
-        <div className="px-4 mx-auto max-w-screen-xl">
-
-          <h2 className="mb-8 text-2xl font-bold text-gray-900 dark:text-white">
-            More articles from {getAuthor?.name}
-          </h2>
-
-          <div className="container my-12 mx-auto grid grid-cols-1 gap-12 md:gap-12 lg:gap-12  lg:grid-cols-3  md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 ">
-
-            {
-              allAuthor?.map(item => <Card key={item?.uuid} item={item} />)
-            }
-
+      {/* Author Stories Grid */}
+      <section aria-label="Author Stories">
+        <div className="flex items-center justify-between mb-8 pb-3 border-b border-border/60">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Articles by {author.name}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Read all writings contributed by this author
+            </p>
           </div>
         </div>
-      </aside>
 
-
-    </>
+        {posts && posts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {posts.map((item: PostOrPage) => (
+              <Card key={item.uuid} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-muted-foreground">
+            No published stories found for this author yet.
+          </div>
+        )}
+      </section>
+    </div>
   )
-
 }
+
 export default AuthorPage
