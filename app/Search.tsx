@@ -1,88 +1,165 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { FaSearch } from "react-icons/fa";
+import { Search as SearchIcon, X, Calendar, Clock, ArrowRight } from "lucide-react";
 import Link from 'next/link';
-import searchData from '../../search.json'
-import type { PostOrPage } from "@tryghost/content-api"
-
-
-let searchPost: PostOrPage[] = []
-
+import type { PostOrPage } from "@tryghost/content-api";
+import { format } from 'date-fns';
 
 function Search() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [data, setData] = useState<PostOrPage[] | null>(null);
 
-  const [query, setQuery] = useState(null)
+  const loadData = useCallback(() => {
+    if (!data) {
+      import('@/search.json').then((mod) => {
+        setData(mod.default as PostOrPage[]);
+      });
+    }
+  }, [data]);
 
+  // Global keyboard shortcut: Command+K / Ctrl+K
   useEffect(() => {
-
-    searchPost.length = 0;
-
-    searchData.map((item: PostOrPage) => {
-
-      if (item?.title.trim().toLowerCase().includes(query?.trim().toLowerCase())) {
-        searchPost.push(item)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        loadData();
+        setOpen((prev) => !prev);
       }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [loadData]);
 
-    })
+  const searchResults = useMemo(() => {
+    if (!query || !query.trim() || !data) {
+      return [];
+    }
 
-  }, [query])
-
+    const q = query.trim().toLowerCase();
+    return data
+      .filter((item: PostOrPage) => item?.title?.trim().toLowerCase().includes(q))
+      .slice(0, 8);
+  }, [query, data]);
 
   return (
-    <Popover.Root>
+    <Popover.Root
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (nextOpen) loadData();
+        setOpen(nextOpen);
+      }}
+    >
       <Popover.Trigger asChild>
         <button
-          className="cursor-pointer outline-none"
-          aria-label="Search"
+          className="group flex h-9 items-center gap-2 rounded-lg border border-border/70 bg-muted/40 px-3 text-xs text-muted-foreground transition-all hover:border-border hover:bg-muted/80 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:w-44 md:w-56 cursor-pointer"
+          aria-label="Search stories"
+          onMouseEnter={loadData}
+          onFocus={loadData}
         >
-          <FaSearch />
+          <SearchIcon className="size-3.5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
+          <span className="flex-1 text-left truncate">Search stories...</span>
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 rounded border border-border/80 bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground shadow-xs">
+            <span className="text-[11px]">⌘</span>K
+          </kbd>
         </button>
       </Popover.Trigger>
 
       <Popover.Portal>
-
         <Popover.Content
-          className="rounded p-2 bg-white dark:bg-gray-800 w-[480px] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
-          sideOffset={5}
+          align="end"
+          sideOffset={8}
+          className="z-50 w-[calc(100vw-2rem)] sm:w-[460px] rounded-xl border border-border bg-popover/95 p-0 text-popover-foreground shadow-xl backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
         >
-
-          <div className='my-2'>
-            <label htmlFor="default-search" className="mb-2 mt-5 text-sm font-medium text-gray-900 sr-only dark:text-white">Search bar </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              </div>
-              <input type="search" id="default-search" onChange={(event) => setQuery(event?.target.value)} className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Start searching here ..." required />
-
-            </div>
+          {/* Header with Search Input */}
+          <div className="flex items-center border-b border-border/60 px-3 py-2.5">
+            <SearchIcon className="mr-2.5 size-4 text-muted-foreground shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => {
+                loadData();
+                setQuery(e.target.value);
+              }}
+              placeholder="Search articles by title, topic..."
+              className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none"
+              autoFocus
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="rounded-sm p-1 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                aria-label="Clear search"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
           </div>
 
-
-          {
-
-            searchPost.length > 0 ? searchPost.map(item => {
-
-              return (
-                <div key={item.uuid} className='my-3'>
-                  <div className="text-white my-2 py-2 bg-blue-400 dark:bg-gray-900 dark:hover:bg-blue-400 border-none rounded-md dark:text-white">
-                    <Link href={`read/${item.slug}`} className="relative inline-flex items-center rounded-lg w-full px-4 py-2 text-sm font-medium">
-                      {item.title}
-                    </Link>
-                  </div>
+          {/* Results List */}
+          <div className="max-h-[380px] overflow-y-auto p-2">
+            {!query.trim() ? (
+              <div className="px-3 py-8 text-center text-xs text-muted-foreground">
+                Type something to search across all published articles...
+              </div>
+            ) : searchResults.length > 0 ? (
+              <div className="space-y-1">
+                <div className="px-2 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Found {searchResults.length} {searchResults.length === 1 ? 'article' : 'articles'}
                 </div>
-              )
-            }) : " "
+                {searchResults.map((item) => (
+                  <Link
+                    key={item.uuid}
+                    href={`/read/${item.slug}`}
+                    onClick={() => {
+                      setOpen(false);
+                      setQuery('');
+                    }}
+                    className="group flex flex-col gap-1 rounded-lg p-2.5 text-sm transition-colors hover:bg-muted/80 focus:bg-muted/80 focus:outline-none"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                        {item.title}
+                      </span>
+                      <ArrowRight className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-0.5" />
+                    </div>
 
-          }
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      {item.published_at && (
+                        <span className="inline-flex items-center gap-1">
+                          <Calendar className="size-3" />
+                          {format(new Date(item.published_at), 'MMM dd, yyyy')}
+                        </span>
+                      )}
+                      {item.reading_time ? (
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="size-3" />
+                          {item.reading_time} min read
+                        </span>
+                      ) : null}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="px-3 py-8 text-center text-xs text-muted-foreground">
+                No articles matching &ldquo;<span className="text-foreground font-medium">{query}</span>&rdquo;
+              </div>
+            )}
+          </div>
 
+          {/* Footer note */}
+          <div className="flex items-center justify-between border-t border-border/50 bg-muted/30 px-3 py-2 text-[11px] text-muted-foreground">
+            <span>Press <kbd className="rounded border bg-background px-1 py-0.5 font-mono text-[10px]">ESC</kbd> to close</span>
+            <span>Ghost Search</span>
+          </div>
         </Popover.Content>
-
       </Popover.Portal>
-
-    </Popover.Root >
-  )
+    </Popover.Root>
+  );
 }
 
 export default Search;
