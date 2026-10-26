@@ -1,11 +1,10 @@
 import GhostContentAPI, { GhostAPI, GhostError, PostOrPage, PostsOrPages, Author, Tag, Tags, Settings } from "@tryghost/content-api";
 
-// Create API instance with site credentialE
-
+// Create API instance with site credentials
 export const api: GhostAPI = new GhostContentAPI({
   url: process.env.GHOST_URL as string,
   key: process.env.GHOST_KEY as string,
-  version: "v5.0"
+  version: "v6"
 });
 
 

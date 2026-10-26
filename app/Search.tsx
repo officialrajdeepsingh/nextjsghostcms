@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { Search as SearchIcon, X, Calendar, Clock, ArrowRight } from "lucide-react";
 import Link from 'next/link';
@@ -71,7 +71,7 @@ function Search() {
         <Popover.Content
           align="end"
           sideOffset={8}
-          className="z-50 w-[calc(100vw-2rem)] sm:w-[460px] rounded-xl border border-border bg-popover/95 p-0 text-popover-foreground shadow-xl backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+          className="z-50 w-[calc(100vw-2rem)] sm:w-115 rounded-xl border border-border bg-popover/95 p-0 text-popover-foreground shadow-xl backdrop-blur-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
         >
           {/* Header with Search Input */}
           <div className="flex items-center border-b border-border/60 px-3 py-2.5">
@@ -100,7 +100,7 @@ function Search() {
           </div>
 
           {/* Results List */}
-          <div className="max-h-[380px] overflow-y-auto p-2">
+          <div className="max-h-95 overflow-y-auto p-2">
             {!query.trim() ? (
               <div className="px-3 py-8 text-center text-xs text-muted-foreground">
                 Type something to search across all published articles...
