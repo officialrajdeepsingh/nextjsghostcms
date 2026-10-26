@@ -1,76 +1,62 @@
-import { getPaginationPosts, getPosts, getNavigation } from "../../ghost-client"
-import Card from '../../Card'
-import PaginationItem from "../../Pagination"
-import type { Metadata } from "next";
-import type { PostsOrPages } from "@tryghost/content-api";
-import { notFound } from 'next/navigation';
+import { getPaginationPosts, getPosts, getSettings } from "@/ghost-client"
+import Card from "@/Card"
+import PaginationItem from "@/Pagination"
+import type { Metadata } from "next"
+import type { PostsOrPages, PostOrPage } from "@tryghost/content-api"
+import { notFound } from "next/navigation"
+import { generateGhostMetadata } from "@/seo"
 
-// SEO 
-export async function generateMetadata(): Promise<Metadata> {
+type Params = Promise<{ item: string }>
 
-  const metaData: Metadata = await getNavigation()
+export async function generateMetadata(props: { params: Params }): Promise<Metadata> {
+  const params = await props.params
+  const metaData = await getSettings()
 
-  // error handling 
-
-  if (metaData) {
-    return {
-      title: metaData.title,
-      description: metaData.description,
-      openGraph: {
-        title: metaData.title,
-        description: metaData?.description,
-        url: metaData.url,
-      },
-    }
-  }
+  return generateGhostMetadata(metaData, {
+    fallbackTitle: "Articles",
+    titleSuffix: `Page ${params.item}`,
+    descriptionSuffix: `(Page ${params.item})`,
+    url: metaData?.url ? `${metaData.url}/pagination/${params.item}` : undefined,
+  })
 }
 
-// generate Static Params
-export async function generateStaticParams() {
-
+export async function generateStaticParams(): Promise<{ item: string }[]> {
   const posts: PostsOrPages = await getPosts()
+  const totalPages = posts?.meta?.pagination?.pages ?? 0
 
-  let paginationItem: { item: number }[] = []
-
-  for (let index = 1; index <= posts?.meta.pagination.pages; index++) {
-    paginationItem.push({
-      item: index.toString(),
-    })
-  }
-
-
-
-  return paginationItem
-
+  return Array.from({ length: totalPages }, (_, index) => ({
+    item: (index + 1).toString(),
+  }))
 }
 
+export default async function Pagination(props: { params: Params }) {
+  const params = await props.params
+  const pageNumber: number = Number.parseInt(params.item, 10)
 
-// component 
-export default async function Pagination({ params }: { params: { item: string }; }) {
+  const posts = await getPaginationPosts(pageNumber)
 
-  let getParams: number = Number.parseInt(params.item)
-
-  const getPost: PostsOrPages = await getPaginationPosts(getParams)
-
-  if (getPost?.length === 0) {
+  if (!posts || posts.length === 0) {
     notFound()
   }
 
   return (
-    <>
+    <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
+      <header className="mb-8 pb-3 border-b border-border/60">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          Stories — Page {pageNumber}
+        </h1>
+        <p className="text-xs text-muted-foreground mt-1">
+          Showing archive page {pageNumber} of {posts.meta.pagination.pages}
+        </p>
+      </header>
 
-      <main className="container my-12 mx-auto grid grid-cols-1 gap-2 md:gap-3 lg:gap-4 lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4">
-
-        {
-          getPost?.map(
-            item => {
-              return <Card key={item.uuid} item={item} />
-            })
-        }
+      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {posts.map((item: PostOrPage) => (
+          <Card key={item.uuid} item={item} />
+        ))}
       </main>
 
-      <PaginationItem item={getPost.meta.pagination} />
-
-    </>
+      <PaginationItem item={posts.meta.pagination} />
+    </div>
   )
 }
